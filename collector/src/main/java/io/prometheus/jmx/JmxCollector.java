@@ -17,8 +17,9 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.management.MalformedObjectNameException;
+import javax.management.remote.JMXConnector;
 import javax.management.ObjectName;
+import javax.management.MalformedObjectNameException;
 
 
 import org.json.simple.JSONArray;
@@ -41,6 +42,8 @@ public class JmxCollector extends Collector {
     }
 
     String hostPort;
+    String hostUrl;
+    Map<String,Object> env;
     boolean lowercaseOutputName;
     boolean lowercaseOutputLabelNames;
     List<ObjectName> whitelistObjectNames = new ArrayList<ObjectName>();
@@ -62,6 +65,26 @@ public class JmxCollector extends Collector {
         } else {
           // Default to local JVM.
           hostPort = "";
+        }
+
+        if(config.containsKey("hostUrl")) {
+          hostUrl = (String)config.get("hostUrl");
+        } else {
+          //Use hostPort variable if it's set.
+          if(!hostPort.isEmpty()) {
+              hostUrl = "service:jmx:rmi:///jndi/rmi://" + hostPort + "/jmxrmi";
+          } else {
+              hostUrl = "";
+          }
+        }
+
+        if(config.containsKey("username") && config.containsKey("password")) {
+            //Put credentials in if both username & password is defined.
+            env = new HashMap<String,Object>();
+            env.put(JMXConnector.CREDENTIALS, new String[]{(String)config.get("username"), (String)config.get("password")});
+        } else {
+            //Otherwise just set it to null
+            env = null;
         }
 
         if (config.containsKey("lowercaseOutputName")) {
@@ -284,7 +307,7 @@ public class JmxCollector extends Collector {
 
     public List<MetricFamilySamples> collect() {
       Receiver receiver = new Receiver();
-      JmxScraper scraper = new JmxScraper(hostPort, whitelistObjectNames, blacklistObjectNames, receiver);
+      JmxScraper scraper = new JmxScraper(hostPort, env, whitelistObjectNames, blacklistObjectNames, receiver);
       long start = System.nanoTime();
       double error = 0;
       try {
