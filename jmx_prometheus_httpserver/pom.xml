@@ -13,6 +13,7 @@
     See https://github.com/prometheus/jmx_exporter/blob/master/README.md
   </description>
   <url>http://github.com/prometheus/jmx_exporter</url>
+  <version>0.5.1</version>
 
   <dependencies>
     <dependency>
