@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.prometheus.jmx</groupId>
     <artifactId>parent</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5.2</version>
   </parent>
 
   <groupId>io.prometheus.jmx</groupId>
@@ -13,13 +13,12 @@
     See https://github.com/prometheus/jmx_exporter/blob/master/README.md
   </description>
   <url>http://github.com/prometheus/jmx_exporter</url>
-  <version>0.5.1</version>
 
   <dependencies>
     <dependency>
       <groupId>io.prometheus.jmx</groupId>
       <artifactId>collector</artifactId>
-      <version>0.5-SNAPSHOT</version>
+      <version>0.5.2</version>
     </dependency>
     <dependency>
       <groupId>io.prometheus</groupId>
